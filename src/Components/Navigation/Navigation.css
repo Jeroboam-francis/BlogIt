@@ -1,0 +1,29 @@
+.navigation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--blue-dark);
+  padding: 1rem 2rem;
+}
+
+.navigation-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: var(--text-color-light);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+  background-color: var(--blue-light);
+  font-weight: bold;
+}

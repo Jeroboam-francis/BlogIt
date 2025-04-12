@@ -1,4 +1,28 @@
-/* * {
+:root {
+  /* Color Hunt Palette */
+  --blue-dark: #59607c;
+  --blue-medium: #3d90d7;
+  --blue-light: #7ac6d2;
+  --mint: #b5fccd;
+
+  /* Derived colors */
+  --text-color: #2d3748;
+  --text-color-light: #ffffff;
+  --text-color-muted: #718096;
+
+  /* Background colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7fafc;
+  --bg-dark: #1a202c;
+
+  /* Utility colors */
+  --success: #48bb78;
+  --warning: #ed8936;
+  --danger: #f56565;
+  --info: #4299e1;
+}
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -11,12 +35,22 @@ html {
 body {
   font-size: 1.6rem;
   color: var(--text-color);
+  background-color: var(--bg-primary);
   font-family: "Lora", serif;
+  line-height: 1.6;
 }
+
 a {
   text-decoration: none;
+  color: var(--primary-600);
+  transition: color 0.2s ease;
 }
+
+a:hover {
+  color: var(--primary-800);
+}
+
 ul,
 ol {
   list-style: none;
-} */
+}

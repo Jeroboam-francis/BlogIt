@@ -75,10 +75,10 @@ function SignUp() {
 
       setIsSuccess(true);
 
-      // Redirect after 2 seconds
+      // Redirect
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 5000);
     } catch (error) {
       setSubmitError(error.message || "Registration failed. Please try again.");
     } finally {
