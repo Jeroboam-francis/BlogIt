@@ -1,6 +1,6 @@
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
-import "./Home.css";
+import "./HomePage.css";
 
 function Home() {
   return (

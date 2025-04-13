@@ -16,94 +16,7 @@ import {
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
 import { useQuery } from "react-query";
-
-// Mock fetch function (to be replaced with actual API call later)
-const fetchBlogs = async () => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Mock data for now
-  return [
-    {
-      id: 1,
-      title: "Getting Started with React and Material UI",
-      excerpt:
-        "Learn how to build beautiful user interfaces with React and Material UI components...",
-      featuredImage: "https://picsum.photos/seed/react/800/500",
-      author: {
-        username: "reactmaster",
-        avatar: "https://picsum.photos/seed/author1/100/100",
-      },
-      updatedAt: "2025-04-05T14:48:00.000Z",
-      category: "Web Development",
-    },
-    {
-      id: 2,
-      title: "The Future of Artificial Intelligence",
-      excerpt:
-        "Exploring the potential impacts of AI on society and what the future might hold for this revolutionary technology...",
-      featuredImage: "https://picsum.photos/seed/ai/800/500",
-      author: {
-        username: "aienthusiast",
-        avatar: null,
-      },
-      updatedAt: "2025-04-08T09:22:00.000Z",
-      category: "Technology",
-    },
-    {
-      id: 3,
-      title: "Healthy Eating Habits for Busy Professionals",
-      excerpt:
-        "Discover practical tips for maintaining a balanced diet despite your hectic schedule...",
-      featuredImage: "https://picsum.photos/seed/food/800/500",
-      author: {
-        username: "healthguru",
-        avatar: "https://picsum.photos/seed/author3/100/100",
-      },
-      updatedAt: "2025-04-10T16:30:00.000Z",
-      category: "Health & Wellness",
-    },
-    {
-      id: 4,
-      title: "Mastering JavaScript Promises",
-      excerpt:
-        "A comprehensive guide to understanding and effectively using Promises in JavaScript...",
-      featuredImage: "https://picsum.photos/seed/javascript/800/500",
-      author: {
-        username: "jsdev",
-        avatar: "https://picsum.photos/seed/author4/100/100",
-      },
-      updatedAt: "2025-04-11T11:15:00.000Z",
-      category: "Programming",
-    },
-    {
-      id: 5,
-      title: "Sustainable Living: Small Changes, Big Impact",
-      excerpt:
-        "Learn how making small adjustments to your daily habits can contribute to a more sustainable planet...",
-      featuredImage: "https://picsum.photos/seed/eco/800/500",
-      author: {
-        username: "ecowarrior",
-        avatar: null,
-      },
-      updatedAt: "2025-04-12T08:45:00.000Z",
-      category: "Lifestyle",
-    },
-    {
-      id: 6,
-      title: "Financial Freedom: A Step-by-Step Guide",
-      excerpt:
-        "Practical strategies to help you achieve financial independence and secure your future...",
-      featuredImage: "https://picsum.photos/seed/finance/800/500",
-      author: {
-        username: "moneymentor",
-        avatar: "https://picsum.photos/seed/author6/100/100",
-      },
-      updatedAt: "2025-04-09T14:20:00.000Z",
-      category: "Finance",
-    },
-  ];
-};
+import { blogApi } from "../../services/api";
 
 // Helper function to format dates
 const formatDate = (dateString) => {
@@ -130,11 +43,17 @@ function BlogListing() {
   }, [navigate]);
 
   // Fetch blogs with React Query
-  const { data: blogs, isLoading, error } = useQuery("blogs", fetchBlogs);
+  const {
+    data: blogs,
+    isLoading,
+    error,
+  } = useQuery(["blogs", filter], () =>
+    blogApi.getBlogs(filter !== "all" ? { category: filter } : {})
+  );
 
   // Get unique categories for filter chips
   const categories = blogs
-    ? ["all", ...new Set(blogs.map((blog) => blog.category))]
+    ? ["all", ...new Set(blogs.map((blog) => blog.category).filter(Boolean))]
     : ["all"];
 
   // Handle blog click
@@ -199,141 +118,125 @@ function BlogListing() {
             ))}
           </Box>
 
-          {/* Loading state */}
-          {isLoading && (
-            <Box sx={{ display: "flex", justifyContent: "center", my: 6 }}>
+          {/* Blog cards */}
+          {isLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
               <CircularProgress />
             </Box>
-          )}
-
-          {/* Error state */}
-          {error && (
-            <Box sx={{ textAlign: "center", my: 6 }}>
-              <Typography color="error">
-                Failed to load blog posts. Please try again later.
-              </Typography>
-            </Box>
-          )}
-
-          {/* Blog list */}
-          {blogs && (
+          ) : error ? (
+            <Typography color="error" align="center">
+              Error loading blogs. Please try again later.
+            </Typography>
+          ) : blogs?.length === 0 ? (
+            <Typography align="center" sx={{ my: 4 }}>
+              No blogs found. Try a different category or check back later.
+            </Typography>
+          ) : (
             <Grid container spacing={4}>
-              {blogs
-                .filter((blog) => filter === "all" || blog.category === filter)
-                .map((blog) => (
-                  <Grid item xs={12} md={6} lg={4} key={blog.id}>
-                    <Card
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        transition: "transform 0.3s, box-shadow 0.3s",
-                        "&:hover": {
-                          transform: "translateY(-5px)",
-                          boxShadow: 6,
-                          cursor: "pointer",
-                        },
-                      }}
-                      onClick={() => handleBlogClick(blog.id)}
-                    >
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={blog.featuredImage}
-                        alt={blog.title}
-                      />
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            mb: 2,
-                          }}
+              {blogs?.map((blog) => (
+                <Grid item xs={12} sm={6} md={4} key={blog.id}>
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "0.3s",
+                      "&:hover": {
+                        transform: "translateY(-5px)",
+                        boxShadow: 3,
+                      },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleBlogClick(blog.id)}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={blog.featuredImage || "/placeholder-blog.jpg"}
+                      alt={blog.title}
+                    />
+
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      {blog.category && (
+                        <Chip
+                          label={blog.category}
+                          size="small"
+                          sx={{ mb: 2 }}
+                        />
+                      )}
+
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        sx={{ fontWeight: 600 }}
+                      >
+                        {blog.title}
+                      </Typography>
+
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 2 }}
+                      >
+                        {blog.excerpt}
+                      </Typography>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          mt: "auto",
+                        }}
+                      >
+                        <Avatar
+                          src={blog.author?.avatar}
+                          alt={blog.author?.username}
+                          sx={{ width: 32, height: 32, mr: 1 }}
                         >
-                          <Chip
-                            label={blog.category}
-                            size="small"
-                            sx={{ fontSize: "0.75rem" }}
-                          />
+                          {getInitials(blog.author?.username)}
+                        </Avatar>
+
+                        <Box>
+                          <Typography variant="subtitle2">
+                            {blog.author?.username}
+                          </Typography>
+
                           <Typography variant="caption" color="text.secondary">
-                            {formatDate(blog.updatedAt)}
+                            {formatDate(blog.createdAt)}
                           </Typography>
                         </Box>
-
-                        <Typography
-                          variant="h6"
-                          component="h2"
-                          gutterBottom
-                          sx={{
-                            fontWeight: 600,
-                            lineHeight: 1.2,
-                            mb: 1,
-                          }}
-                        >
-                          {blog.title}
-                        </Typography>
-
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          paragraph
-                          sx={{ mb: 2 }}
-                        >
-                          {blog.excerpt}
-                        </Typography>
-
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            mt: "auto",
-                          }}
-                        >
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            {blog.author.avatar ? (
-                              <Avatar
-                                src={blog.author.avatar}
-                                alt={blog.author.username}
-                                sx={{ width: 32, height: 32 }}
-                              />
-                            ) : (
-                              <Avatar
-                                sx={{
-                                  width: 32,
-                                  height: 32,
-                                  bgcolor: "primary.main",
-                                }}
-                              >
-                                {getInitials(blog.author.username)}
-                              </Avatar>
-                            )}
-                            <Typography
-                              variant="body2"
-                              sx={{ ml: 1, fontWeight: 500 }}
-                            >
-                              {blog.author.username}
-                            </Typography>
-                          </Box>
-
-                          <Button
-                            size="small"
-                            color="primary"
-                            sx={{
-                              textTransform: "none",
-                              fontWeight: 600,
-                            }}
-                          >
-                            Read More
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
           )}
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 6,
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => navigate("/blogs/create")}
+              sx={{
+                px: 4,
+                py: 1,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              Write Your Story
+            </Button>
+          </Box>
         </Container>
       </Box>
 

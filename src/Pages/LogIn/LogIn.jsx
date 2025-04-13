@@ -11,9 +11,13 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Header from "../../Components/Header/Header";
+import { authApi } from "../../services/api";
+import { useQueryClient } from "react-query";
 
 function LogIn() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  
   const [credentials, setCredentials] = useState({
     usernameOrEmail: "",
     password: "",
@@ -50,19 +54,30 @@ function LogIn() {
     setSubmitError("");
 
     try {
-      //TODO: Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // TODO: call My authentication API here:
-      // const response = await authApi.login(credentials);
-
-      // TODO: work on successful login
+      // Call authentication API
+      const userData = await authApi.login(credentials);
+      
+      // Save auth data to localStorage
+      localStorage.setItem("token", userData.token);
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("user", JSON.stringify({
+        id: userData.id,
+        username: userData.username,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName
+      }));
+      
+      // Update React Query cache with user data
+      queryClient.setQueryData('user', userData);
 
       // Redirect to blog listing page after successful login
       navigate("/blogs");
     } catch (error) {
-      setSubmitError("Invalid credentials. Please try again.");
+      console.error("Login error:", error);
+      setSubmitError(
+        error.response?.data?.message || "Invalid credentials. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
