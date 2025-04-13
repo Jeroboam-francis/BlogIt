@@ -76,57 +76,17 @@ function UserProfile() {
   // Check if viewing own profile
   const isOwnProfile = currentUser && currentUser.id === parseInt(id);
 
+  // // Fetch user profile data
   // Fetch user profile data
   const {
     data: profile,
     isLoading,
     error,
     refetch,
-  } = useQuery(["userProfile", id], () => {
-    // Call your API to get user profile
-    // For now, returning mock data
-    return {
-      id: parseInt(id),
-      username: "johndoe",
-      firstName: "John",
-      lastName: "Doe",
-      avatar: null,
-      bio: "Web developer and tech enthusiast. I write about JavaScript, React, and web development.",
-      createdAt: "2023-01-15T12:00:00Z",
-      blogsCount: 12,
-      recentBlogs: [
-        {
-          id: 1,
-          title: "Getting Started with React Hooks",
-          excerpt: "Learn how to use React Hooks to simplify your components.",
-          featuredImage: "/placeholder-blog.jpg",
-          category: "Technology",
-          createdAt: "2023-10-15T12:00:00Z",
-          commentsCount: 5,
-          likesCount: 12,
-        },
-        {
-          id: 2,
-          title: "Building a RESTful API with Node.js",
-          excerpt:
-            "A comprehensive guide to creating RESTful APIs using Node.js and Express.",
-          featuredImage: "/placeholder-blog.jpg",
-          category: "Technology",
-          createdAt: "2023-09-22T12:00:00Z",
-          commentsCount: 3,
-          likesCount: 8,
-        },
-      ],
-    };
-  });
+  } = useQuery(["userProfile", id], () => blogApi.get(`/users/${id}`));
 
-  // Update profile mutation
   const updateProfileMutation = useMutation(
-    (data) => {
-      // Call my API to update profile
-      // For now, just returning the data
-      return Promise.resolve(data);
-    },
+    (data) => blogApi.put(`/users/${id}`, data),
     {
       onSuccess: (data) => {
         setIsEditMode(false);
@@ -135,7 +95,6 @@ function UserProfile() {
           ...data,
         }));
 
-        // Update local storage if it's the current user
         if (isOwnProfile) {
           const updatedUser = {
             ...currentUser,
@@ -148,6 +107,77 @@ function UserProfile() {
       },
     }
   );
+  // const {
+  //   data: profile,
+  //   isLoading,
+  //   error,
+  //   refetch,
+  // } = useQuery(["userProfile", id], () => {
+  //   // Call your API to get user profile
+  //   // For now, returning mock data
+  //   return {
+  //     id: parseInt(id),
+  //     username: "johndoe",
+  //     firstName: "John",
+  //     lastName: "Doe",
+  //     avatar: null,
+  //     bio: "Web developer and tech enthusiast. I write about JavaScript, React, and web development.",
+  //     createdAt: "2023-01-15T12:00:00Z",
+  //     blogsCount: 12,
+  //     recentBlogs: [
+  //       {
+  //         id: 1,
+  //         title: "Getting Started with React Hooks",
+  //         excerpt: "Learn how to use React Hooks to simplify your components.",
+  //         featuredImage: "/placeholder-blog.jpg",
+  //         category: "Technology",
+  //         createdAt: "2023-10-15T12:00:00Z",
+  //         commentsCount: 5,
+  //         likesCount: 12,
+  //       },
+  //       {
+  //         id: 2,
+  //         title: "Building a RESTful API with Node.js",
+  //         excerpt:
+  //           "A comprehensive guide to creating RESTful APIs using Node.js and Express.",
+  //         featuredImage: "/placeholder-blog.jpg",
+  //         category: "Technology",
+  //         createdAt: "2023-09-22T12:00:00Z",
+  //         commentsCount: 3,
+  //         likesCount: 8,
+  //       },
+  //     ],
+  //   };
+  // });
+
+  // // Update profile mutation
+  // const updateProfileMutation = useMutation(
+  //   (data) => {
+  //     // Call my API to update profile
+  //     // For now, just returning the data
+  //     return Promise.resolve(data);
+  //   },
+  //   {
+  //     onSuccess: (data) => {
+  //       setIsEditMode(false);
+  //       queryClient.setQueryData(["userProfile", id], (oldData) => ({
+  //         ...oldData,
+  //         ...data,
+  //       }));
+
+  //       // Update local storage if it's the current user
+  //       if (isOwnProfile) {
+  //         const updatedUser = {
+  //           ...currentUser,
+  //           firstName: data.firstName,
+  //           lastName: data.lastName,
+  //         };
+  //         localStorage.setItem("user", JSON.stringify(updatedUser));
+  //         setCurrentUser(updatedUser);
+  //       }
+  //     },
+  //   }
+  // );
 
   // Handle tab change
   const handleTabChange = (event, newValue) => {

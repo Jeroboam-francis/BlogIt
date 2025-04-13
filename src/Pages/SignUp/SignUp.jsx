@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { authApi } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -59,6 +60,33 @@ function SignUp() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!validate()) return;
+
+  //   setIsSubmitting(true);
+  //   setSubmitError("");
+
+  //   try {
+  //     // TODO: Mock API call
+  //     await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  //     // TODO: I  will  call API here from my back end:
+  //     // const response = await authApi.signUp(formData);
+
+  //     setIsSuccess(true);
+
+  //     // Redirect
+  //     setTimeout(() => {
+  //       navigate("/");
+  //     }, 5000);
+  //   } catch (error) {
+  //     setSubmitError(error.message || "Registration failed. Please try again.");
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -67,20 +95,22 @@ function SignUp() {
     setSubmitError("");
 
     try {
-      // TODO: Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Call the signup API
+      const response = await authApi.register(formData);
 
-      // TODO: I  will  call API here from my back end:
-      // const response = await authApi.signUp(formData);
-
+      // Show success message
       setIsSuccess(true);
 
-      // Redirect
+      // Redirect to the homepage after a delay
       setTimeout(() => {
         navigate("/");
       }, 5000);
     } catch (error) {
-      setSubmitError(error.message || "Registration failed. Please try again.");
+      console.error("Signup error:", error);
+      setSubmitError(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
