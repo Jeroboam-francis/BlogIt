@@ -6,18 +6,14 @@ import {
   Typography,
   TextField,
   Button,
-  Divider,
   Alert,
   CircularProgress,
 } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import { authApi } from "../../services/api";
-import { useQueryClient } from "react-query";
 
 function LogIn() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  
   const [credentials, setCredentials] = useState({
     usernameOrEmail: "",
     password: "",
@@ -56,22 +52,12 @@ function LogIn() {
     try {
       // Call authentication API
       const userData = await authApi.login(credentials);
-      
+
       // Save auth data to localStorage
       localStorage.setItem("token", userData.token);
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("user", JSON.stringify({
-        id: userData.id,
-        username: userData.username,
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName
-      }));
-      
-      // Update React Query cache with user data
-      queryClient.setQueryData('user', userData);
+      localStorage.setItem("user", JSON.stringify(userData));
 
-      // Redirect to blog listing page after successful login
+      // Redirect to blog listing page
       navigate("/blogs");
     } catch (error) {
       console.error("Login error:", error);
@@ -105,18 +91,7 @@ function LogIn() {
               mb: 3,
             }}
           >
-            Welcome back to BlogIT
-          </Typography>
-
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{
-              textAlign: "center",
-              mb: 4,
-            }}
-          >
-            Sign in to access your account and start writing
+            Welcome back to BlogIt
           </Typography>
 
           {submitError && (
@@ -133,7 +108,6 @@ function LogIn() {
               id="usernameOrEmail"
               label="Username or Email"
               name="usernameOrEmail"
-              autoComplete="username"
               value={credentials.usernameOrEmail}
               onChange={handleChange}
               error={!!errors.usernameOrEmail}
@@ -149,7 +123,6 @@ function LogIn() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
               value={credentials.password}
               onChange={handleChange}
               error={!!errors.password}
@@ -179,10 +152,8 @@ function LogIn() {
               )}
             </Button>
 
-            <Divider sx={{ my: 3 }}>or</Divider>
-
             <Typography variant="body2" color="text.secondary" align="center">
-              You do not have an account?{" "}
+              Don't have an account?{" "}
               <Link
                 to="/signup"
                 style={{
@@ -191,7 +162,7 @@ function LogIn() {
                   fontWeight: 500,
                 }}
               >
-                Create Account
+                Create One
               </Link>
             </Typography>
           </Box>

@@ -27,3 +27,22 @@
   background-color: var(--blue-light);
   font-weight: bold;
 }
+.nav-button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+
+.nav-button:hover {
+  text-decoration: underline;
+}
+
+.nav-link.active,
+.nav-button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}

@@ -77,6 +77,10 @@ export const blogApi = {
     const response = await api.get(`/users/${id}`);
     return response.data;
   },
+  updateUserProfile: async (id, data) => {
+    const response = await api.put(`/users/${id}`, data);
+    return response.data;
+  },
 };
 
 export default api;
