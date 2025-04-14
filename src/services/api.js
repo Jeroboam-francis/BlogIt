@@ -1,19 +1,19 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Add request interceptor for adding token to requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,17 +27,17 @@ api.interceptors.request.use(
 // Auth API
 export const authApi = {
   login: async (credentials) => {
-    const response = await api.post('/auth/login', credentials);
+    const response = await api.post("/auth/login", credentials);
     return response.data;
   },
 
   register: async (userData) => {
-    const response = await api.post('/auth/register', userData);
+    const response = await api.post("/auth/register", userData);
     return response.data;
   },
 
   getProfile: async () => {
-    const response = await api.get('/auth/me');
+    const response = await api.get("/auth/me");
     return response.data;
   },
 };
@@ -45,7 +45,7 @@ export const authApi = {
 // Blog API
 export const blogApi = {
   getBlogs: async (params) => {
-    const response = await api.get('/blogs', { params });
+    const response = await api.get("/blogs", { params });
     return response.data;
   },
 
@@ -55,7 +55,7 @@ export const blogApi = {
   },
 
   createBlog: async (blogData) => {
-    const response = await api.post('/blogs', blogData);
+    const response = await api.post("/blogs", blogData);
     return response.data;
   },
 
@@ -71,6 +71,10 @@ export const blogApi = {
 
   toggleLike: async (id) => {
     const response = await api.post(`/blogs/${id}/like`);
+    return response.data;
+  },
+  getUserProfile: async (id) => {
+    const response = await api.get(`/users/${id}`);
     return response.data;
   },
 };

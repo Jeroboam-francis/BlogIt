@@ -1,5 +1,4 @@
 :root {
-
   --blue-dark: #59607c;
   --blue-medium: #3d90d7;
   --blue-light: #7ac6d2;
@@ -9,12 +8,10 @@
   --text-color-light: #ffffff;
   --text-color-muted: #718096;
 
-
   --bg-primary: #ffffff;
   --bg-secondary: #f7fafc;
   --bg-dark: #1a202c;
 
-  
   --success: #48bb78;
   --warning: #ed8936;
   --danger: #f56565;

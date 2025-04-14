@@ -1,6 +1,7 @@
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import "./HomePage.css";
+import heroimage from "../../assets/hero-image.jpg";
 
 function Home() {
   return (
@@ -26,7 +27,7 @@ function Home() {
             </div>
           </div>
           <div className="hero-image">
-            <img src="/assets/hero-image.jpg" alt="Person writing a blog" />
+            <img src={heroimage} alt="Person writing a blog" />
           </div>
         </div>
       </section>

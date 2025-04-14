@@ -83,7 +83,8 @@ function UserProfile() {
     isLoading,
     error,
     refetch,
-  } = useQuery(["userProfile", id], () => blogApi.get(`/users/${id}`));
+  } = useQuery(["userProfile", id], () => blogApi.getUserProfile(id));
+  // } = useQuery(["userProfile", id], () => blogApi.get(`/users/${id}`));
 
   const updateProfileMutation = useMutation(
     (data) => blogApi.put(`/users/${id}`, data),

@@ -101,9 +101,9 @@ function SignUp() {
       // Show success message
       setIsSuccess(true);
 
-      // Redirect to the homepage after a delay
+      // Redirect to the profile page after a delay
       setTimeout(() => {
-        navigate("/");
+        navigate(`/profile/${response.id}`);
       }, 5000);
     } catch (error) {
       console.error("Signup error:", error);
@@ -115,7 +115,6 @@ function SignUp() {
       setIsSubmitting(false);
     }
   };
-
   if (isSuccess) {
     return (
       <Box sx={{ minHeight: "100vh", backgroundColor: "#f9f9f9" }}>
