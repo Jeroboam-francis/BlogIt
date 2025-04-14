@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://blogit-backend-cgu1.onrender.com";
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
@@ -27,17 +29,17 @@ api.interceptors.request.use(
 // Auth API
 export const authApi = {
   login: async (credentials) => {
-    const response = await api.post("/auth/login", credentials);
+    const response = await api.post("/login", credentials);
     return response.data;
   },
 
   register: async (userData) => {
-    const response = await api.post("/auth/register", userData);
+    const response = await api.post("/api/auth/register", userData);
     return response.data;
   },
 
   getProfile: async () => {
-    const response = await api.get("/auth/me");
+    const response = await api.get("/me");
     return response.data;
   },
 };
@@ -74,10 +76,10 @@ export const blogApi = {
     return response.data;
   },
   getUserProfile: async (id) => {
-    const response = await api.get(`/users/${id}`);
+    const response = await api.get(`/api/users/${id}`);
     return response.data;
   },
-  updateUserProfile: async  (data) => {
+  updateUserProfile: async (data) => {
     const response = await api.put(`/users/profile`, data);
     return response.data;
   },

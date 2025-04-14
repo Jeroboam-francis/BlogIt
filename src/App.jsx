@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import apiUrl from "./utilis/utilis";
+// import apiUrl from "./utilis/utilis";
 // Pages
 import HomePage from "./Pages/HomePage/HomePage";
 import BlogListing from "./Pages/BlogListing/BlogListing";
@@ -81,7 +81,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
-  console.log(apiUrl);
+  // console.log(apiUrl);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
