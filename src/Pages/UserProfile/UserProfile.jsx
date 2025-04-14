@@ -84,10 +84,10 @@ function UserProfile() {
     error,
     refetch,
   } = useQuery(["userProfile", id], () => blogApi.getUserProfile(id));
-  // } = useQuery(["userProfile", id], () => blogApi.get(`/users/${id}`));
+ 
 
   const updateProfileMutation = useMutation(
-    (data) => blogApi.updateUserProfile(id, data),
+    (data) => blogApi.updateUserProfile(data),
     {
       onSuccess: (data) => {
         setIsEditMode(false);
