@@ -1,4 +1,4 @@
-import { FaBook } from "react-icons/fa6";
+import { FaBook } from "react-icons/fa";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -17,7 +17,7 @@ export default Logo;
 const LogoContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  gap: theme.spacing(1), 
+  gap: theme.spacing(1),
   textDecoration: "none",
   color: "inherit",
   "&:hover": {
@@ -26,11 +26,10 @@ const LogoContainer = styled(Box)(({ theme }) => ({
 }));
 
 const BookIcon = styled(FaBook)(({ theme }) => ({
-  fontSize: theme.typography.h6.fontSize, 
- 
+  fontSize: theme.typography.h6.fontSize,
 }));
 
 const LogoText = styled(Typography)(({ theme }) => ({
-  fontWeight: 700, 
-  letterSpacing: "0.5px", 
+  fontWeight: 700,
+  letterSpacing: "0.5px",
 }));
